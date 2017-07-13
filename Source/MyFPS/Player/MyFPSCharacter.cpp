@@ -45,19 +45,20 @@ void AMyFPSCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
-	if (GunBlueprint = NULL)
+	if (GunBlueprint == NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GunBlueprint Not Found"));
 		return;
 	}
 
-	AGun* const Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
+	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint);
 	this->SetActorLabel("Player1");
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	if (Gun)
 	{
 		Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+		Gun->AnimInstance = Mesh1P->GetAnimInstance();
 	}
 	else
 	{
@@ -72,12 +73,12 @@ void AMyFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 {
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
-
+	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint); //TODO fix this!
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	//InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AMyFPSCharacter::TouchStarted);
-	//PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMyFPSCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, Gun, &AGun::OnFire);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyFPSCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMyFPSCharacter::MoveRight);

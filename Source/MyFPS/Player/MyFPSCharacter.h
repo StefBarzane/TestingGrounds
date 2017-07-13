@@ -42,7 +42,7 @@ public:
 
 private:
 
-	//AGun* const Gun;
+	AGun* Gun;
 
 protected:
 
