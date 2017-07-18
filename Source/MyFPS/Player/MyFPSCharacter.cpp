@@ -59,11 +59,13 @@ void AMyFPSCharacter::BeginPlay()
 	{
 		Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 		Gun->AnimInstance = Mesh1P->GetAnimInstance();
+		UE_LOG(LogTemp, Warning, TEXT("Gun attached in BeginPlay()"));
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Gun not found!"));
 	}
+	InputComponent->BindAction("Fire", IE_Pressed, Gun, &AGun::OnFire);
 }
 
 //////////////////////////////////////////////////////////////////////////

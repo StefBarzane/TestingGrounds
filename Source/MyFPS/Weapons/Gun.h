@@ -23,6 +23,7 @@ public:
 	AGun();
 
 	/** Fires a projectile. */
+	UFUNCTION(BlueprintCallable, Category = "Input")
 	void OnFire();
 
 	// Called every frame
@@ -35,15 +36,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	class UAnimInstance* AnimInstance; //class = forward declaration(?)
 
-protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		class USoundBase* FireSound;
+	class USoundBase* FireSound;
 
 	/** AnimMontage to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		class UAnimMontage* FireAnimation;
+	class UAnimMontage* FireAnimation;
 };

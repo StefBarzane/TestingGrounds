@@ -7,9 +7,9 @@
 AMyFPSProjectile::AMyFPSProjectile() 
 {
 	// Use a sphere as a simple collision representation
-	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("MySphereComp"));
 	CollisionComp->InitSphereRadius(5.0f);
-	CollisionComp->BodyInstance.SetCollisionProfileName("Projectile");
+	CollisionComp->BodyInstance.SetCollisionProfileName("MyProjectile");
 	CollisionComp->OnComponentHit.AddDynamic(this, &AMyFPSProjectile::OnHit);		// set up a notification for when this component hits something blocking
 
 	// Players can't walk on it
@@ -20,7 +20,7 @@ AMyFPSProjectile::AMyFPSProjectile()
 	RootComponent = CollisionComp;
 
 	// Use a ProjectileMovementComponent to govern this projectile's movement
-	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
+	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MyProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
 	ProjectileMovement->InitialSpeed = 3000.f;
 	ProjectileMovement->MaxSpeed = 3000.f;

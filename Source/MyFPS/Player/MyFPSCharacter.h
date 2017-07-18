@@ -21,7 +21,6 @@ class AMyFPSCharacter : public ACharacter
 public:
 	AMyFPSCharacter();
 
-protected:
 	virtual void BeginPlay();
 
 public:
