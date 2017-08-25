@@ -30,20 +30,26 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	TSubclassOf<class AMyFPSProjectile> ProjectileClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimInstance* AnimInstance; //class = forward declaration(?)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	class UAnimInstance* AnimInstanceFP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	class UAnimInstance* AnimInstanceTP;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
 	class USoundBase* FireSound;
 
 	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-	class UAnimMontage* FireAnimation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	class UAnimMontage* FireAnimationFP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+	class UAnimMontage* FireAnimationTP;
 };

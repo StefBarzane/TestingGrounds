@@ -5,6 +5,8 @@
 #include "../Weapons/Gun.h"
 #include "GameFramework/InputSettings.h"
 
+//TODO: REMOVE THIS CLASS
+
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 //////////////////////////////////////////////////////////////////////////
@@ -12,6 +14,8 @@ DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 AMyFPSCharacter::AMyFPSCharacter()
 {
+	UE_LOG(LogTemp, Warning, TEXT("We are being used!"));
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
@@ -58,7 +62,7 @@ void AMyFPSCharacter::BeginPlay()
 	if (Gun)
 	{
 		Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-		Gun->AnimInstance = Mesh1P->GetAnimInstance();
+		Gun->AnimInstanceFP = Mesh1P->GetAnimInstance();
 		UE_LOG(LogTemp, Warning, TEXT("Gun attached in BeginPlay()"));
 	}
 	else
@@ -75,7 +79,7 @@ void AMyFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 {
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
-	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint); //TODO fix this!
+	Gun = GetWorld()->SpawnActor<AGun>(GunBlueprint); //
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 

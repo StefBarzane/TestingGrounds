@@ -39,7 +39,7 @@ void AGun::Tick(float DeltaTime)
 void AGun::OnFire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnFire() was called!"))
-	// try and fire a projectile
+	// try firing a projectile
 	if (ProjectileClass != NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Projectile Class was found!"))
@@ -65,13 +65,23 @@ void AGun::OnFire()
 			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 		}
 
+
+		//TODO: tidy this up
 		// try and play a firing animation if specified
-		if (FireAnimation != NULL)
+		if (FireAnimationFP != NULL)
 		{
 			// Get the animation object for the arms mesh
-			if (AnimInstance != NULL)
+			if (AnimInstanceFP != NULL)
 			{
-				AnimInstance->Montage_Play(FireAnimation, 1.f);
+				AnimInstanceFP->Montage_Play(FireAnimationFP, 1.f);
+			}
+		}
+		if (FireAnimationTP != NULL)
+		{
+			// Get the animation object for the third person mesh
+			if (AnimInstanceTP != NULL)
+			{
+				AnimInstanceTP->Montage_Play(FireAnimationTP, 1.f);
 			}
 		}
 	}

@@ -22,10 +22,10 @@ AMyFPSProjectile::AMyFPSProjectile()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("MyProjectileComp"));
 	ProjectileMovement->UpdatedComponent = CollisionComp;
-	ProjectileMovement->InitialSpeed = 3000.f;
-	ProjectileMovement->MaxSpeed = 3000.f;
-	ProjectileMovement->bRotationFollowsVelocity = true;
-	ProjectileMovement->bShouldBounce = true;
+	ProjectileMovement->InitialSpeed = 1000.f;
+	ProjectileMovement->MaxSpeed = 1000.f;
+	ProjectileMovement->bRotationFollowsVelocity = false;
+	ProjectileMovement->bShouldBounce = false;
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
@@ -36,7 +36,7 @@ void AMyFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
 	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		OtherComp->AddImpulseAtLocation(GetVelocity() * 1.0f, GetActorLocation());
 
 		Destroy();
 	}
