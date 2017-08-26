@@ -31,3 +31,13 @@ void AMyInfinteTerrainGameMode::PopulateBoundsVolumePool()
 		++VolumeIterator; ///advance iterator
 	}
 }
+
+int32 AMyInfinteTerrainGameMode::GetGameScore()
+{
+	return GameScore;
+}
+
+void AMyInfinteTerrainGameMode::SetGameScore(int32 Score)
+{
+	GameScore = Score;
+}

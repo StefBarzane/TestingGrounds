@@ -4,6 +4,7 @@
 #include "Tile.h"
 #include "DrawDebugHelpers.h"
 #include "MyActorPoolComponent.h"
+#include "Static/MyUtils.h"
 
 // Sets default values
 ATile::ATile()
@@ -25,24 +26,54 @@ FVector ATile::FindEmptyLocation(float Radius, float LocationZOffset)
 	else return FVector::ZeroVector;
 }
 
+template<class T>
+void ATile::RandomlyPlaceActors(TSubclassOf<T> ToSpawn, int MinSpawn, int MaxSpawn, float Radius, float ZOffset, float MinScale, float MaxScale)
+{
+	int NumToSpawn = FMath::RandRange(MinSpawn, MaxSpawn);
+
+	for (size_t i = 0; i < NumToSpawn; i++) // TODO: maybe we could give each object a value based on size and spawn until a max value is reached
+	{
+		FSpawnTransform SpawnTransform;
+		SpawnTransform.Scale = FMath::RandRange(MinScale, MaxScale);
+		SpawnTransform.Location = FindEmptyLocation(Radius * SpawnTransform.Scale, ZOffset);
+
+		if (SpawnTransform.Location != FVector::ZeroVector) {
+			SpawnTransform.Rotation = FRotator::MakeFromEuler(FVector(0, 0, FMath::RandRange(-180.0f, 180.0f)));
+			SpawnTransform.Location -= FVector(0, 0, ZOffset);
+			PlaceActor(ToSpawn, SpawnTransform);
+		}
+	}
+}
+
 void ATile::PlaceActor(TSubclassOf<AActor> ToSpawn, FSpawnTransform& SpawnTransform)
 {
+	UMyUtils::MyDebug(FString("PlaceActor [Actor] was called!"));
 	AActor* Spawned = GetWorld()->SpawnActor<AActor>(ToSpawn);
-	Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
-	Spawned->SetActorRelativeLocation(SpawnTransform.Location + GroundOffset);
-	Spawned->SetActorRelativeRotation(SpawnTransform.Rotation);
-	Spawned->SetActorScale3D(FVector(SpawnTransform.Scale));
+
+	if (Spawned)
+	{
+		Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+		Spawned->SetActorRelativeLocation(SpawnTransform.Location + GroundOffset);
+		Spawned->SetActorRelativeRotation(SpawnTransform.Rotation);
+		Spawned->SetActorScale3D(FVector(SpawnTransform.Scale));
+	}
+	else { UMyUtils::MyDebug("No Actor to Spawn!"); }
 }
 
 void ATile::PlaceActor(TSubclassOf<APawn> ToSpawn, FSpawnTransform& SpawnTransform)
 {
 	UE_LOG(LogTemp, Warning, TEXT("PlaceActor [Pawn] was called: %s"), *(ToSpawn->GetName()));
 	APawn* Spawned = GetWorld()->SpawnActor<APawn>(ToSpawn);
-	Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
-	Spawned->SetActorRelativeLocation(SpawnTransform.Location + GroundOffset);
-	Spawned->SetActorRelativeRotation(SpawnTransform.Rotation);
-	Spawned->SpawnDefaultController();
-	Spawned->Tags.Add(FName("Enemy"));
+	if (Spawned)
+	{
+		Spawned->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false));
+		Spawned->SetActorRelativeLocation(SpawnTransform.Location + GroundOffset);
+		Spawned->SetActorRelativeRotation(SpawnTransform.Rotation);
+		Spawned->SpawnDefaultController();
+		Spawned->Tags.Add(FName("Enemy"));
+	}
+	else { UMyUtils::MyDebug("No Actor to Spawn!"); }
+
 }
 
 TArray<FSpawnTransform> ATile::RandomSpawnTransforms(int MinObjects, int MaxObjects, float Radius, float ZOffset, float MinScale, float MaxScale)
@@ -91,24 +122,14 @@ bool ATile::CanSpawnAtLocation(FVector Location, float Radius) {
 	return !HasHit;
 }
 
-void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn, float Radius, float MinScale, float MaxScale, float ZOffset)
+void ATile::PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn, int MaxSpawn, float Radius, float ZOffset, float MinScale, float MaxScale)
 {
-	for (FSpawnTransform SpawnTransform : RandomSpawnTransforms(MinSpawn, MaxSpawn, Radius, ZOffset, MinScale, MaxScale))
-	{
-		PlaceActor(ToSpawn, SpawnTransform);
-	}
-
-	///UE_LOG (LogTemp, Warning, TEXT("Spawn point is %s"), *SpawnPoint.ToCompactString());
+	RandomlyPlaceActors(ToSpawn, MinSpawn, MaxSpawn, Radius, ZOffset, MinScale, MaxScale);
 }
 
 void ATile::PlaceAICharacters(TSubclassOf<APawn> ToSpawn, int MinSpawn, int MaxSpawn, float Radius, float ZOffset)
 {
-	for (FSpawnTransform SpawnTransform : RandomSpawnTransforms(MinSpawn, MaxSpawn, Radius, ZOffset))
-	{
-		//ToSpawn->
-		PlaceActor(ToSpawn, SpawnTransform);
-		
-	}
+	RandomlyPlaceActors(ToSpawn, MinSpawn, MaxSpawn, Radius, ZOffset);
 }
 
 void ATile::SetPool(UMyActorPoolComponent * InPool)

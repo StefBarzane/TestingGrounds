@@ -31,7 +31,11 @@ private:
 	FVector FindEmptyLocation(float Radius, float LocationZOffset);
 	void PositionNavMeshVolume();
 
+	template<class T>
+	void RandomlyPlaceActors(TSubclassOf<T> ToSpawn, int MinSpawn = 1, int MaxSpawn = 10, float Radius = 200.0f, float ZOffset = 0.0f, float MinScale = 1.0f, float MaxScale = 1.0f);
+
 	TArray<FSpawnTransform> RandomSpawnTransforms(int MinObjects, int MaxObjects, float Radius, float ZOffset, float MinScale = 1.0f, float MaxScale = 1.0f);
+	
 	void PlaceActor(TSubclassOf<AActor> ToSpawn, FSpawnTransform& SpawnTransform);
 	void PlaceActor(TSubclassOf<APawn> ToSpawn, FSpawnTransform& SpawnTransform);
 	
@@ -40,7 +44,7 @@ public:
 	ATile();
 
 	UFUNCTION(BlueprintCallable, Category = "MyFuncs")
-	void PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn = 1, int MaxSpawn = 10, float Radius = 200.0f, float MinScale = 1.0f, float MaxScale = 1.0f, float ZOffSet = 0.0f);
+	void PlaceActors(TSubclassOf<AActor> ToSpawn, int MinSpawn = 1, int MaxSpawn = 10, float Radius = 200.0f, float ZOffset = 0.0f, float MinScale = 1.0f, float MaxScale = 1.0f);
 
 	UFUNCTION(BlueprintCallable, Category = "MyFuncs")
 	void PlaceAICharacters(TSubclassOf<APawn> ToSpawn, int MinSpawn = 1, int MaxSpawn = 10, float Radius = 200.0f, float ZOffSet = 0.0f);
@@ -62,3 +66,4 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 };
+
